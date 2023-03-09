@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streaming</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- box-icons -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- Link Swiper's CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    <style>
+        /* google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;800&family=Poppins:wght@300&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    scroll-padding-top: 2rem;
+    scroll-behavior: smooth;
+
+}
+/* variable */
+:root{
+    --main-color:#ff2c1f;
+    --text-color:#020307;
+    --bg-color:#fff;
+}
+html::-webkit-scrollbar{
+    width: 0.5rem;
+    background: var(--text-color);
+}
+html::-webkit-scrollbar-thumb{
+    background: var(--main-color);
+    border-radius: 5rem;
+}
+body{
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+section{
+    padding: 4.5rem 0 1.5rem;
+}
+header{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 100px;
+    transition: 0.5s;
+    /* background: var(--main-color); */
+}
+header.shadow{
+    background: var(--text-color);
+}
+
+.logo{
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    text-decoration: none;
+}
+.logo .bx{
+    font-size: 24px;
+    color: var(--main-color);
+    /* text-decoration: none; */
+}
+.navbar{
+    display: flex;
+    column-gap: 5rem;
+    /* color: white; */
+    /* text-decoration: none; */
+}
+.navbar li{
+    position: relative;
+    /* text-decoration: none; */
+}
+navbar a{
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--bg-color);
+    /* text-decoration: none; */
+}
+#nav-1{
+    text-decoration: none;
+    color: var(--bg-color);
+    font-weight: 900;
+    font-size: larger;
+}
+.navbar a::after{
+    content: '';
+    width: 0;
+    height: 2px;
+    background: var(--main-color);
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    transition: 0.4s all linear;
+}
+.navbar a:hover::after, .navbar .home-active::after{
+    width: 100%;
+}
+#menu-icon{
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1000001;
+    display: none;
+}
+.btn{
+    padding: 0.7rem 1.4rem;
+    background: var(--main-color);
+    color: var(--bg-color);
+    font-weight: 900;
+    border-radius: 0.5rem;
+    text-decoration: none;
+}
+.btn:hover{
+    background:#fa1216;
+}
+.container{
+    width: 100%;
+    min-height: 640px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgb(2,3,7,0.4);
+    /* z-index: -1; */
+}
+.container img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -1;
+    /* background: linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)); */
+    /* background-color: grey; */
+    /* background-blend-mode: multiply; */
+    filter: brightness(45%);
+}
+.swiper-pagination-bullet{
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 0.2rem !important;
+    background: var(--bg-color) !important;
+    opacity: 1 !important;
+}
+.swiper-pagination-bullet-active{
+    width: 1.5rem !important;
+    background: var(--main-color) !important;
+}
+.home-text{
+    z-index: 1000;
+    padding: 0 150px;
+}
+.home-text span{
+    color: var(--bg-color);
+    font-weight: bolder;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.home-text h1{
+    color: var(--bg-color);
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom:1rem;
+}
+.play{
+    position: absolute;
+    right: 4rem;
+    bottom: 10%;
+}
+.play .bx{
+    background: var(--main-color);
+    padding: 10px;
+    font-size: 2rem;
+    border-radius: 50%;
+    border: 4px solid #fa1216;
+    color: var(--bg-color);
+}
+.play .bx:hover{
+    background: var(--bg-color);
+    color: var(--main-color);
+    transition: 0.2s all linear;
+}
+.heading{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--main-color);
+}
+.movie-container{
+    max-width: 968px;
+    margin-right: auto;
+    margin-left: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(180px,auto));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.box .box-img{
+    width: 100%;
+    height: 270px;
+}
+.box .box-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.box .box-img img:hover{
+    transform: translateY(10px);
+    transition: 0.2s all linear;
+}
+.box h3{
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+.box span{
+    font-size: 13px;
+}
+.newsletter{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 2rem;
+}
+.newsletter h2{
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+}
+.newsletter form{
+    background: var(--bg-color);
+    padding: 10px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+.newsletter form input{
+    border: none;
+    outline: none;
+
+}
+.newsletter form .email{
+    width: 280px;
+}
+.newsletter form input:placeholder{
+    color: var(--text-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.newsletter .btn{
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+}
+.footer{
+    max-width: 968px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+}
+.social{
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+.social .bx{
+    background: var(--bg-color);
+    padding: 2px;
+    font-size: 2rem;
+    border-radius: 50%;
+    border: 4px solid rgb(2,3,7,0.4);
+    color: var(--main-color);
+}
+.social .bx:hover{
+    background: var(--main-color);
+    color: var(--bg-color);
+    transition: 0.2s all linear;
+}
+.copyright{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+@media (max-width:1080px) {
+    .home-text{
+        padding: 0 100px;
+    }
+}
+@media (max-width:991px) {
+    header{
+        padding: 18px 4%;
+    }
+    section{
+        padding: 50px 4%;
+    }
+    .home-text{
+        padding: 0 4%;
+    }
+    .home-text h1{
+        font-size: 3rem;
+    }
+}
+@media (max-width:774px){
+    header{
+        padding: 12px 4%;
+    }
+  
+}
+    </style>
+</head>
+<body>
+    <!-- navbar -->
+    <header>
+        <a href="#" class="logo"><i class='bx bxs-movie-play'></i>MOVIES</a>
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+        <!-- menu -->
+        <ul class="navbar">
+            <li><a href="#home" class="home-active" id="nav-1">Home</a></li>
+            <li><a href="#movies" id="nav-1">Movie</a></li>
+            <li><a href="#coming" id="nav-1">Coming</a></li>
+            <li><a href="#newsletter" id="nav-1">Newsletter</a></li>
+        </ul>
+        <a href="#" class="btn">Sign In</a>
+    </header>
+    <!-- home -->
+    <section class="home swiper" id="home">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide container">
+                <img src="image/home1.jpg" alt="">
+                <div class="home-text">
+                    <span>Marvel Universe</span>
+                    <h1>Venom: Let There <br> Be Carnage</h1>
+                    <a href="#" class="btn">Book Now</a>
+                    <a href="#" class="play">
+                        <i class='bx bx-play'></i>
+                    </a>
+                </div>
+            </div>
+           <!-- box-2 -->
+            <div class="swiper-slide container">
+                <img src="image/avengers2.jpg" alt="">
+                <div class="home-text">
+                    <span>Marvel Universe</span>
+                    <h1>Avengers: <br> Infinity War</h1>
+                    <a href="#" class="btn">Book Now</a>
+                    <a href="#" class="play">
+                        <i class='bx bx-play'></i>
+                    </a>
+                </div>
+            </div>
+        <!-- box-3 -->
+            <div class="swiper-slide container">
+                <img src="image/home3.jpg" alt="">
+                <div class="home-text">
+                    <span>Marvel Universe</span>
+                    <h1>Spider-Man: <br> No Way Home</h1>
+                    <a href="#" class="btn">Book Now</a>
+                    <a href="#" class="play">
+                        <i class='bx bx-play'></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+         
+        <div class="swiper-pagination"></div>
+    </section>
+    <!-- movies -->
+    <section class="movies" id="movies">
+        <h2 class="heading">Opening This Week</h2>
+        <!-- movies container-->
+        <div class="movie-container">
+            <!-- box-1 -->
+            <div class="box">
+            <div class="box-img">
+                <img src="image/m1.jpg" alt="">
+            </div>
+            <h3>Venom</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-2 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m2.jpg" alt="">
+            </div>
+            <h3>Dunkirk</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-3 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m3.jpg" alt="">
+            </div>
+            <h3>Batman Vs Superman</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-4 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m4.jpg" alt="">
+            </div>
+            <h3>John Wick 2</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-5 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m5.jpg" alt="">
+            </div>
+            <h3>Aquaman</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-6 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m6.jpg" alt="">
+            </div>
+            <h3>Black Panther</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-7 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m7.jpg" alt="">
+            </div>
+            <h3>Thor</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-8 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m8.png" alt="">
+            </div>
+            <h3>Bumblebee</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-9 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m9.jpg" alt="">
+            </div>
+            <h3>Mortal Engines</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-10 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/m10.jpg" alt="">
+            </div>
+            <h3>Underworld Blood Wars</h3>
+            <span>120 min | Action</span>
+        </div>
+        </div>
+    </section>
+    <!-- coming -->
+    <section class="coming" id="coming">
+        <h2 class="heading">Coming Soon</h2>
+        <!-- coming container -->
+        <div class="movie-container">
+            <!-- box-1 -->
+            <div class="box">
+            <div class="box-img">
+                <img src="image/coming1.jpg" alt="">
+            </div>
+            <h3>Jhonny English</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-2 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming2.jpg" alt="">
+            </div>
+            <h3>Warcraft</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-3 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming3.jpg" alt="">
+            </div>
+            <h3>Rampage</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-4 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming4.jpg" alt="">
+            </div>
+            <h3>The Iron Lady</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-5 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming5.jpg" alt="">
+            </div>
+            <h3>Justice League</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-6 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming6.jpeg" alt="">
+            </div>
+            <h3>Doctor Strange</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-7 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming7.jpg" alt="">
+            </div>
+            <h3>Captain Marvel</h3>
+            <span>120 min | Adventure</span>
+        </div>
+        <!-- box-8 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming8.jpg" alt="">
+            </div>
+            <h3>Black Widow</h3>
+            <span>120 min | Thriller</span>
+        </div>
+        <!-- box-9 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming9.jpg" alt="">
+            </div>
+            <h3>Ant-Man</h3>
+            <span>120 min | Action</span>
+        </div>
+        <!-- box-10 -->
+        <div class="box">
+            <div class="box-img">
+                <img src="image/coming10.jpg" alt="">
+            </div>
+            <h3>Guardians Of The Galaxy</h3>
+            <span>120 min | Action</span>
+        </div>
+        </div>
+    </section>
+    <!-- newletter -->
+    <section class="newsletter" id="newsletter">
+        <h2>Subscribe To Get <br>Newsletter</h2>
+        <form action="">
+            <input type="email" class="email" placeholder="Enter Email....">
+            <input type="Submit" placeholder="Subscribe" class="btn">
+        </form>
+    </section>
+    <!-- footer -->
+    <section class="footer">
+        <a href="#" class="logo">
+            <i class='bx bxs-movie'></i>Movies
+        </a>
+        <div class="social"><a href="#">
+            <i class='bx bxl-facebook'></i></a>
+            <i class='bx bxl-twitter'></i></a>
+            <i class='bx bxl-instagram'></i></a>
+            <i class='bx bxl-tiktok'></i></a>
+        </div>
+    </section>
+    <div class="copyright">
+        <p>&#169; All Right Reserved.</p>
+    </div>
+    <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+  <!-- link to custom js -->
+  <script src="main.js"></script>
+</body>
+</html>
